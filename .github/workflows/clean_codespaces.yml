@@ -1,0 +1,14 @@
+name: Clean Up Codespaces
+
+on:
+  schedule:
+    - cron: "0 2 * * 1-5"
+
+  workflow_dispatch:
+
+jobs:
+  clean:
+    
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh codespace list --json name,gitStatus,state -q '.[] | select(.gitStatus.hasUnpushedChanges == false) | select(.gitStatus.hasUncommitedChanges == false) | select(.state == "Shutdown") | .name' | xargs -t gh codespace delete --codespace
